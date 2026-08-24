@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Saenz Media Co. — Invoice Form</title>
+<link rel="icon" type="image/png" href="assets/saenz-logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #E9E4D8;
+    font-family: 'Work Sans', sans-serif;
+    color: #201F1D;
+  }
+  .app { min-height: 100vh; padding: 40px 16px; }
+  .hidden { display: none !important; }
+
+  .toolbar {
+    max-width: 760px;
+    margin: 0 auto 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .toolbar-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #5C574C;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 4px;
+    border: 1px solid #082A18;
+    background: #082A18;
+    color: #fff;
+    cursor: pointer;
+    font-family: 'Work Sans', sans-serif;
+  }
+  .btn:hover { background: #05170D; }
+  .toolbar-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .btn-light { background: #fff; color: #201F1D; border-color: #D8D2C2; }
+  .btn-light:hover { background: #F5F1E8; }
+  .status-msg { font-size: 12px; color: #0F3D24; margin-right: 4px; }
+
+  .load-panel {
+    max-width: 760px;
+    margin: 0 auto 16px;
+    background: #fff;
+    border: 1px solid #D8D2C2;
+    border-radius: 4px;
+    padding: 16px;
+  }
+  .load-panel.hidden { display: none; }
+  .load-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #5C574C;
+    margin-bottom: 8px;
+  }
+  .icon-btn { background: none; border: none; cursor: pointer; font-size: 14px; }
+  .saved-list { list-style: none; margin: 0; padding: 0; }
+  .saved-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid #EEE9DC;
+    font-size: 13px;
+  }
+  .saved-list button.load-link { background: none; border: none; cursor: pointer; text-align: left; font-size: 13px; }
+  .saved-list button.load-link:hover { text-decoration: underline; }
+  .saved-list button.del-link { background: none; border: none; cursor: pointer; color: #3D6B4E; }
+  .saved-empty { color: #8A8375; font-size: 13px; }
+
+  .card {
+    max-width: 760px;
+    margin: 0 auto;
+    background: #F5F1E8;
+    border-radius: 2px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    overflow: hidden;
+  }
+  .sprockets {
+    background-image: repeating-linear-gradient(
+      to right,
+      #F5F1E8 0px, #F5F1E8 8px,
+      transparent 8px, transparent 32px
+    );
+    background-color: #082A18;
+    background-position: center;
+    height: 24px;
+  }
+  .card-body { padding: 40px; }
+
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 2px solid #082A18;
+  }
+  .logo { height: 56px; width: auto; margin-bottom: 12px; display: block; }
+
+  .field {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: 'Work Sans', sans-serif;
+    padding: 1px 0;
+  }
+  .field:focus { background: #FBFAF6; }
+
+  .field-name {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #082A18;
+    letter-spacing: -0.01em;
+    width: 100%;
+    display: block;
+  }
+  .field-sub {
+    font-size: 13px;
+    color: #6B6355;
+    display: block;
+    width: 260px;
+  }
+
+  .header-right { text-align: right; }
+  .invoice-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #0F3D24;
+    margin-bottom: 4px;
+  }
+  .meta-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    align-items: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: #6B6355;
+  }
+  .meta-key { color: #B0A995; }
+  .field-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    text-align: right;
+    width: 90px;
+  }
+  .status-select {
+    margin-top: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border: 1px solid #D8D2C2;
+    border-radius: 3px;
+    padding: 4px 8px;
+    background: #EDE7D8;
+    color: #082A18;
+  }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #B0A995;
+    margin-bottom: 8px;
+  }
+  .bill-to { margin-bottom: 32px; }
+  .field-bill { font-weight: 500; color: #201F1D; display: block; width: 320px; }
+  .field-bill-sub { font-size: 13px; color: #6B6355; display: block; width: 320px; }
+
+  .items-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+  .items-table thead tr {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #B0A995;
+    border-bottom: 1px solid #082A18;
+  }
+  .items-table th { text-align: left; font-weight: normal; padding: 0 4px 8px; }
+  .col-qty, .col-rate, .col-amt { text-align: right; }
+  .col-num { width: 32px; }
+  .col-qty { width: 60px; }
+  .col-rate { width: 90px; }
+  .col-amt { width: 110px; }
+  .col-del { width: 24px; }
+
+  .items-table tbody tr { border-bottom: 1px solid #E4DECE; }
+  .items-table td { padding: 8px 4px; }
+  .row-num { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #B0A995; }
+  .field-desc { width: 100%; font-size: 13px; }
+  .field-qty, .field-rate { width: 100%; text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
+  .row-amount { font-family: 'IBM Plex Mono', monospace; font-size: 13px; text-align: right; color: #201F1D; }
+  .del-btn { background: none; border: none; cursor: pointer; color: #B0A995; font-size: 13px; }
+  .del-btn:hover { color: #0F3D24; }
+
+  .add-item-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #0F3D24;
+    font-size: 12px;
+    font-weight: 500;
+    margin: 8px 0 32px;
+    padding: 0;
+  }
+  .add-item-btn:hover { text-decoration: underline; }
+
+  .totals { display: flex; justify-content: flex-end; margin-bottom: 40px; }
+  .totals-box { width: 220px; font-size: 14px; }
+  .totals-row { display: flex; justify-content: space-between; padding: 4px 0; color: #6B6355; align-items: center; }
+  .tax-label { display: flex; align-items: center; gap: 4px; }
+  .field-tax { width: 40px; text-align: right; font-family: 'IBM Plex Mono', monospace; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+  .totals-final {
+    padding-top: 10px;
+    margin-top: 6px;
+    border-top: 2px solid #082A18;
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: #082A18;
+  }
+
+  .notes-field {
+    width: 100%;
+    resize: none;
+    font-size: 13px;
+    color: #6B6355;
+    line-height: 1.6;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: 'Work Sans', sans-serif;
+  }
+  .notes-field:focus { background: #FBFAF6; }
+
+  @media print {
+    .no-print { display: none !important; }
+    body { background: #fff; }
+    .app { padding: 0; }
+    .card { box-shadow: none; margin: 0; max-width: 100%; }
+  }
+
+  @media (max-width: 640px) {
+    .app { padding: 20px 10px; }
+    .toolbar { flex-direction: column; align-items: stretch; gap: 10px; }
+    .toolbar-label { text-align: center; }
+    .toolbar-actions { justify-content: center; }
+    .btn { flex: 1 1 auto; justify-content: center; padding: 10px 12px; font-size: 13px; }
+    .load-panel { padding: 14px; }
+    .card-body { padding: 22px 16px; }
+
+    .header { flex-direction: column; align-items: flex-start; gap: 20px; margin-bottom: 28px; padding-bottom: 24px; }
+    .header-right { text-align: left; width: 100%; }
+    .meta-row { justify-content: flex-start; }
+    .field-meta { text-align: left; width: auto; flex: 1; }
+    .status-select { width: 100%; }
+    .field-sub { width: 100%; }
+    .field-name { font-size: 22px; }
+
+    .bill-to { margin-bottom: 24px; }
+    .field-bill, .field-bill-sub { width: 100%; }
+
+    .items-table thead { display: none; }
+    .items-table, .items-table tbody, .items-table tr, .items-table td { display: block; width: 100%; }
+    .items-table tr { border: 1px solid #E4DECE; border-radius: 4px; padding: 12px; margin-bottom: 10px; position: relative; }
+    .items-table td { padding: 6px 0; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .items-table td::before {
+      content: attr(data-label);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #B0A995;
+      flex: 0 0 auto;
+    }
+    .row-num { position: absolute; top: 10px; right: 12px; }
+    .row-num::before { content: none; }
+    .field-desc, .field-qty, .field-rate { text-align: right; }
+    .row-amount { font-weight: 600; }
+    .items-table td.no-print { justify-content: flex-end; padding-top: 4px; }
+
+    .totals { justify-content: stretch; }
+    .totals-box { width: 100%; }
+
+    input, select, textarea { font-size: 16px !important; }
+    .row-num, .items-table td::before { font-size: 10px !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="toolbar no-print">
+    <span class="toolbar-label">Saenz Media Co. — Invoice Form</span>
+    <div class="toolbar-actions">
+      <span id="status" class="status-msg"></span>
+      <button id="btnOpen" class="btn btn-light">Open</button>
+      <button id="btnSave" class="btn btn-light">Save</button>
+      <button id="btnNew" class="btn btn-light">New</button>
+      <button id="btnPrint" class="btn">Print / Save PDF</button>
+    </div>
+  </div>
+
+  <div id="loadPanel" class="load-panel no-print hidden">
+    <div class="load-panel-head">
+      <span>Saved invoices</span>
+      <button id="btnCloseLoad" class="icon-btn">✕</button>
+    </div>
+    <ul id="savedList" class="saved-list"></ul>
+  </div>
+
+  <div class="card print-card">
+    <div class="sprockets"></div>
+    <div class="card-body">
+
+      <div class="header">
+        <div>
+          <img src="assets/saenz-logo.png" alt="Saenz Media Co." class="logo" />
+          <input id="fromName" class="field field-name" value="Saenz Media Co." />
+          <input id="fromAddress" class="field field-sub" value="Frederick, Maryland" />
+          <input id="fromEmail" class="field field-sub" placeholder="email@example.com" value="hello@saenzmedia.co" />
+          <input id="fromPhone" class="field field-sub" placeholder="Phone (optional)" />
+        </div>
+        <div class="header-right">
+          <div class="invoice-label">Invoice</div>
+          <div class="meta-row"><span class="meta-key">No.</span><input id="invNumber" class="field field-meta" value="0001" /></div>
+          <div class="meta-row"><span class="meta-key">Issued</span><input id="invIssued" type="date" class="field field-meta" /></div>
+          <div class="meta-row"><span class="meta-key">Due</span><input id="invDue" type="date" class="field field-meta" /></div>
+          <select id="invStatus" class="status-select">
+            <option>Unpaid</option>
+            <option>Paid</option>
+            <option>Overdue</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="bill-to">
+        <div class="section-label">Bill to</div>
+        <input id="billName" class="field field-bill" placeholder="Client name" />
+        <input id="billAddress" class="field field-bill-sub" placeholder="Client address" />
+        <input id="billEmail" class="field field-bill-sub" placeholder="Client email" />
+      </div>
+
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th class="col-num">#</th>
+            <th class="col-desc">Description</th>
+            <th class="col-qty">Qty</th>
+            <th class="col-rate">Rate</th>
+            <th class="col-amt">Amount</th>
+            <th class="col-del no-print"></th>
+          </tr>
+        </thead>
+        <tbody id="itemsBody"></tbody>
+      </table>
+      <button id="btnAddItem" class="add-item-btn no-print">+ Add line item</button>
+
+      <div class="totals">
+        <div class="totals-box">
+          <div class="totals-row">
+            <span>Subtotal</span>
+            <span id="subtotalOut" class="mono">$0.00</span>
+          </div>
+          <div class="totals-row">
+            <span class="tax-label">Tax <input id="taxPct" type="number" class="field field-tax" value="0" min="0" step="0.1" />%</span>
+            <span id="taxOut" class="mono">$0.00</span>
+          </div>
+          <div class="totals-row totals-final">
+            <span>Total</span>
+            <span id="totalOut">$0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="notes-section">
+        <div class="section-label">Notes</div>
+        <textarea id="notes" class="notes-field" rows="3">Thank you for booking with Saenz Media Co. Payment due within 30 days.</textarea>
+      </div>
+
+    </div>
+    <div class="sprockets"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const uid = () => Math.random().toString(36).slice(2, 10);
+  const today = () => new Date().toISOString().slice(0, 10);
+  const plus30 = () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 30);
+    return d.toISOString().slice(0, 10);
+  };
+  const money = (n) =>
+    (isNaN(n) ? 0 : n).toLocaleString("en-US", { style: "currency", currency: "USD" });
+  const escapeAttr = (s) => String(s || "").replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+
+  const blankItem = () => ({ id: uid(), desc: "", qty: 1, rate: 0 });
+
+  function freshInvoice() {
+    return {
+      number: "0001",
+      dateIssued: today(),
+      dateDue: plus30(),
+      status: "Unpaid",
+      from: {
+        name: "Saenz Media Co.",
+        address: "Frederick, Maryland",
+        email: "hello@saenzmedia.co",
+        phone: "",
+      },
+      billTo: { name: "", address: "", email: "" },
+      items: [blankItem()],
+      taxPct: 0,
+      notes: "Thank you for booking with Saenz Media Co. Payment due within 30 days.",
+    };
+  }
+
+  let invoice = freshInvoice();
+
+  const $ = (id) => document.getElementById(id);
+  const el = {
+    fromName: $("fromName"), fromAddress: $("fromAddress"), fromEmail: $("fromEmail"), fromPhone: $("fromPhone"),
+    invNumber: $("invNumber"), invIssued: $("invIssued"), invDue: $("invDue"), invStatus: $("invStatus"),
+    billName: $("billName"), billAddress: $("billAddress"), billEmail: $("billEmail"),
+    itemsBody: $("itemsBody"), taxPct: $("taxPct"),
+    subtotalOut: $("subtotalOut"), taxOut: $("taxOut"), totalOut: $("totalOut"),
+    notes: $("notes"), status: $("status"),
+  };
+
+  function renderFields() {
+    el.fromName.value = invoice.from.name;
+    el.fromAddress.value = invoice.from.address;
+    el.fromEmail.value = invoice.from.email;
+    el.fromPhone.value = invoice.from.phone;
+    el.invNumber.value = invoice.number;
+    el.invIssued.value = invoice.dateIssued;
+    el.invDue.value = invoice.dateDue;
+    el.invStatus.value = invoice.status;
+    el.billName.value = invoice.billTo.name;
+    el.billAddress.value = invoice.billTo.address;
+    el.billEmail.value = invoice.billTo.email;
+    el.taxPct.value = invoice.taxPct;
+    el.notes.value = invoice.notes;
+    renderItems();
+    renderTotals();
+  }
+
+  function renderItems() {
+    el.itemsBody.innerHTML = "";
+    invoice.items.forEach((it, i) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="row-num" data-label="#">${String(i + 1).padStart(2, "0")}</td>
+        <td data-label="Description"><input class="field field-desc" placeholder="Family session, headshots, wedding video…" value="${escapeAttr(it.desc)}" data-id="${it.id}" data-field="desc" /></td>
+        <td data-label="Qty"><input type="number" class="field field-qty" value="${it.qty}" data-id="${it.id}" data-field="qty" /></td>
+        <td data-label="Rate"><input type="number" class="field field-rate" value="${it.rate}" data-id="${it.id}" data-field="rate" /></td>
+        <td class="row-amount" data-label="Amount">${money((it.qty || 0) * (it.rate || 0))}</td>
+        <td class="no-print"><button class="del-btn" data-del="${it.id}">✕</button></td>
+      `;
+      el.itemsBody.appendChild(tr);
+    });
+
+    el.itemsBody.querySelectorAll("input").forEach((input) => {
+      input.addEventListener("input", (e) => {
+        const { id, field } = e.target.dataset;
+        const item = invoice.items.find((it) => it.id === id);
+        item[field] = field === "desc" ? e.target.value : Number(e.target.value);
+        renderTotals();
+        const row = e.target.closest("tr");
+        row.querySelector(".row-amount").textContent = money((item.qty || 0) * (item.rate || 0));
+      });
+    });
+    el.itemsBody.querySelectorAll("[data-del]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        invoice.items = invoice.items.filter((it) => it.id !== btn.dataset.del);
+        renderItems();
+        renderTotals();
+      });
+    });
+  }
+
+  function renderTotals() {
+    const subtotal = invoice.items.reduce((s, it) => s + (it.qty || 0) * (it.rate || 0), 0);
+    const taxAmt = subtotal * ((invoice.taxPct || 0) / 100);
+    const total = subtotal + taxAmt;
+    el.subtotalOut.textContent = money(subtotal);
+    el.taxOut.textContent = money(taxAmt);
+    el.totalOut.textContent = money(total);
+  }
+
+  // ---- Field bindings ----
+  el.fromName.addEventListener("input", (e) => (invoice.from.name = e.target.value));
+  el.fromAddress.addEventListener("input", (e) => (invoice.from.address = e.target.value));
+  el.fromEmail.addEventListener("input", (e) => (invoice.from.email = e.target.value));
+  el.fromPhone.addEventListener("input", (e) => (invoice.from.phone = e.target.value));
+  el.invNumber.addEventListener("input", (e) => (invoice.number = e.target.value));
+  el.invIssued.addEventListener("input", (e) => (invoice.dateIssued = e.target.value));
+  el.invDue.addEventListener("input", (e) => (invoice.dateDue = e.target.value));
+  el.invStatus.addEventListener("change", (e) => (invoice.status = e.target.value));
+  el.billName.addEventListener("input", (e) => (invoice.billTo.name = e.target.value));
+  el.billAddress.addEventListener("input", (e) => (invoice.billTo.address = e.target.value));
+  el.billEmail.addEventListener("input", (e) => (invoice.billTo.email = e.target.value));
+  el.taxPct.addEventListener("input", (e) => {
+    invoice.taxPct = Number(e.target.value);
+    renderTotals();
+  });
+  el.notes.addEventListener("input", (e) => (invoice.notes = e.target.value));
+
+  $("btnAddItem").addEventListener("click", () => {
+    invoice.items.push(blankItem());
+    renderItems();
+    renderTotals();
+  });
+
+  // ---- Save / Load (localStorage) ----
+  function showStatus(msg) {
+    el.status.textContent = msg;
+    setTimeout(() => (el.status.textContent = ""), 2500);
+  }
+
+  $("btnSave").addEventListener("click", () => {
+    try {
+      localStorage.setItem(`invoice:${invoice.number}`, JSON.stringify(invoice));
+      showStatus(`Saved invoice #${invoice.number}`);
+    } catch {
+      showStatus("Save failed — try again");
+    }
+  });
+
+  $("btnNew").addEventListener("click", () => {
+    const nextNum = String(Number(invoice.number) + 1 || 1).padStart(4, "0");
+    const from = invoice.from;
+    invoice = freshInvoice();
+    invoice.number = nextNum;
+    invoice.from = from;
+    renderFields();
+  });
+
+  $("btnPrint").addEventListener("click", () => window.print());
+
+  const loadPanel = $("loadPanel");
+  $("btnOpen").addEventListener("click", () => {
+    loadPanel.classList.remove("hidden");
+    renderSavedList();
+  });
+  $("btnCloseLoad").addEventListener("click", () => loadPanel.classList.add("hidden"));
+
+  function renderSavedList() {
+    const keys = Object.keys(localStorage).filter((k) => k.startsWith("invoice:"));
+    const list = $("savedList");
+    list.innerHTML = "";
+    if (keys.length === 0) {
+      list.innerHTML = `<li class="saved-empty">No saved invoices yet.</li>`;
+      return;
+    }
+    keys.forEach((key) => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <button class="load-link" data-load="${key}">${key.replace("invoice:", "Invoice #")}</button>
+        <button class="del-link" data-remove="${key}">✕</button>
+      `;
+      list.appendChild(li);
+    });
+    list.querySelectorAll("[data-load]").forEach((btn) =>
+      btn.addEventListener("click", () => {
+        const raw = localStorage.getItem(btn.dataset.load);
+        if (raw) {
+          invoice = JSON.parse(raw);
+          renderFields();
+          showStatus(`Loaded ${btn.dataset.load.replace("invoice:", "#")}`);
+        }
+        loadPanel.classList.add("hidden");
+      })
+    );
+    list.querySelectorAll("[data-remove]").forEach((btn) =>
+      btn.addEventListener("click", () => {
+        localStorage.removeItem(btn.dataset.remove);
+        renderSavedList();
+      })
+    );
+  }
+
+  renderFields();
+})();
+</script>
+
+</body>
+</html>
