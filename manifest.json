@@ -1,0 +1,14 @@
+{
+  "name": "Saenz Media Co. — Invoices",
+  "short_name": "Invoices",
+  "description": "Create, save, and print invoices for Saenz Media Co.",
+  "start_url": "./invoice-form.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#E9E4D8",
+  "theme_color": "#082A18",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
