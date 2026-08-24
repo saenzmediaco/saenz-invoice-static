@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Saenz Media Co. — Invoices</title>
+  <link rel="icon" type="image/png" href="assets/saenz-logo.png" />
+  <link rel="stylesheet" href="invoice.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- App -->
+  <div id="app" class="app">
+    <div class="toolbar no-print">
+      <span class="toolbar-label">Saenz Media Co. — Invoice Builder</span>
+      <div class="toolbar-actions">
+        <span id="status" class="status-msg"></span>
+        <button id="btnOpen" class="btn btn-light">Open</button>
+        <button id="btnSave" class="btn btn-light">Save</button>
+        <button id="btnNew" class="btn btn-light">New</button>
+        <button id="btnPrint" class="btn btn-primary">Print / Save PDF</button>
+      </div>
+    </div>
+
+    <div id="loadPanel" class="load-panel no-print hidden">
+      <div class="load-panel-head">
+        <span>Saved invoices</span>
+        <button id="btnCloseLoad" class="icon-btn">✕</button>
+      </div>
+      <ul id="savedList" class="saved-list"></ul>
+    </div>
+
+    <div class="card print-card">
+      <div class="sprockets"></div>
+
+      <div class="card-body">
+        <div class="header">
+          <div>
+            <img src="assets/saenz-logo.png" alt="Saenz Media Co." class="logo" />
+            <input id="fromName" class="field field-name" />
+            <input id="fromAddress" class="field field-sub" />
+            <input id="fromEmail" class="field field-sub" placeholder="email@example.com" />
+            <input id="fromPhone" class="field field-sub" placeholder="Phone (optional)" />
+          </div>
+          <div class="header-right">
+            <div class="invoice-label">Invoice</div>
+            <div class="meta-row"><span class="meta-key">No.</span><input id="invNumber" class="field field-meta" /></div>
+            <div class="meta-row"><span class="meta-key">Issued</span><input id="invIssued" type="date" class="field field-meta" /></div>
+            <div class="meta-row"><span class="meta-key">Due</span><input id="invDue" type="date" class="field field-meta" /></div>
+            <select id="invStatus" class="status-select">
+              <option>Unpaid</option>
+              <option>Paid</option>
+              <option>Overdue</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="bill-to">
+          <div class="section-label">Bill to</div>
+          <input id="billName" class="field field-bill" placeholder="Client name" />
+          <input id="billAddress" class="field field-bill-sub" placeholder="Client address" />
+          <input id="billEmail" class="field field-bill-sub" placeholder="Client email" />
+        </div>
+
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th class="col-num">#</th>
+              <th class="col-desc">Description</th>
+              <th class="col-qty">Qty</th>
+              <th class="col-rate">Rate</th>
+              <th class="col-amt">Amount</th>
+              <th class="col-del no-print"></th>
+            </tr>
+          </thead>
+          <tbody id="itemsBody"></tbody>
+        </table>
+        <button id="btnAddItem" class="add-item-btn no-print">+ Add line item</button>
+
+        <div class="totals">
+          <div class="totals-box">
+            <div class="totals-row">
+              <span>Subtotal</span>
+              <span id="subtotalOut" class="mono"></span>
+            </div>
+            <div class="totals-row">
+              <span class="tax-label">Tax <input id="taxPct" type="number" class="field field-tax" />%</span>
+              <span id="taxOut" class="mono"></span>
+            </div>
+            <div class="totals-row totals-final">
+              <span>Total</span>
+              <span id="totalOut"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="notes-section">
+          <div class="section-label">Notes</div>
+          <textarea id="notes" class="notes-field" rows="3"></textarea>
+        </div>
+      </div>
+
+      <div class="sprockets"></div>
+    </div>
+  </div>
+
+  <script src="invoice.js"></script>
+</body>
+</html>
